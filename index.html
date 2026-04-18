@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>മദ്രസ നോട്ട്ബുക്ക് - Image Support</title>
+    <title>മദ്രസ നോട്ട്ബുക്ക്</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Amiri&display=swap');
 
@@ -33,7 +33,7 @@
             height: 2px;
             background-color: #007bff;
             position: absolute;
-            top: 110px;
+            top: 120px;
             z-index: 1;
         }
 
@@ -50,12 +50,13 @@
         .header-section {
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-items: flex-start;
             padding: 20px 20px 10px 100px;
-            margin-bottom: 30px;
             z-index: 5;
+            min-height: 80px;
         }
 
+        /* ഹെഡിംഗിൽ ചിത്രം വരാൻ */
         .lesson-area {
             font-size: 22pt;
             flex-grow: 1;
@@ -75,7 +76,7 @@
             display: flex;
             flex-grow: 1;
             z-index: 5;
-            margin-top: 15px;
+            margin-top: 25px;
         }
 
         .number-margin {
@@ -97,12 +98,19 @@
             min-height: 800px;
         }
 
-        /* ചിത്രങ്ങളുടെ വലിപ്പം ക്രമീകരിക്കാൻ */
+        /* പ്ലേസ്‌ഹോൾഡർ സെറ്റിംഗ്‌സ് */
+        [contenteditable=true]:empty:before {
+            content: attr(data-placeholder);
+            color: #ccc;
+            font-family: sans-serif;
+            font-size: 16pt;
+        }
+
         img {
-            max-width: 100%;
+            max-width: 250px; /* ഹെഡിംഗിൽ ചിത്രം വരുമ്പോൾ വല്ലാതെ വലുതാകാതിരിക്കാൻ */
             height: auto;
+            display: block;
             margin: 10px 0;
-            border-radius: 5px;
         }
 
         .controls {
@@ -123,12 +131,10 @@
             font-weight: bold;
             cursor: pointer;
             box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-            text-align: center;
-            text-decoration: none;
         }
 
-        .btn-print { background-color: #28a745; }
         .btn-image { background-color: #007bff; }
+        .btn-print { background-color: #28a745; }
 
         @media print {
             .controls { display: none; }
@@ -140,40 +146,47 @@
 <body>
 
     <div class="controls">
-        <input type="file" id="imageInput" accept="image/*" style="display: none;" onchange="addImage(event)">
+        <input type="file" id="imageInput" accept="image/*" style="display: none;" onchange="insertImage(event)">
         <button class="btn btn-image" onclick="document.getElementById('imageInput').click()">📷 ചിത്രം ചേർക്കുക</button>
         <button class="btn btn-print" onclick="window.print()">പ്രിന്റ് / PDF</button>
     </div>
-
     <div class="notebook-page">
         <div class="margin-line"></div>
         <div class="top-blue-line"></div>
+
         <div class="header-section">
-            <div class="lesson-area" contenteditable="true">പാഠം: ................................</div>
+            <div class="lesson-area" id="header-area" contenteditable="true" data-placeholder="പാഠം എഴുതുകയോ ചിത്രം ചേർക്കുകയോ ചെയ്യാം..."></div>
             <div class="date-area" contenteditable="true">തിയ്യതി: ..../..../2026</div>
         </div>
 
         <div class="typing-container">
             <div class="number-margin" contenteditable="true">1.</div>
-            <div class="main-content" id="editor" contenteditable="true">
-                ഇവിടെ എഴുതുകയോ ചിത്രം ചേർക്കുകയോ ചെയ്യാം...
-            </div>
+            <div class="main-content" id="main-editor" contenteditable="true" data-placeholder="ഇവിടെ എഴുതി തുടങ്ങാം..."></div>
         </div>
     </div>
 
     <script>
-        function addImage(event) {
+        let lastFocusedEditor = document.getElementById('main-editor');
+
+        // ഏത് ഭാഗത്താണോ അവസാനം ക്ലിക്ക് ചെയ്തത് അവിടെ ചിത്രം വരാൻ
+        document.getElementById('header-area').addEventListener('focus', function() {
+            lastFocusedEditor = this;
+        });
+        document.getElementById('main-editor').addEventListener('focus', function() {
+            lastFocusedEditor = this;
+        });
+
+        function insertImage(event) {
             const reader = new FileReader();
             reader.onload = function() {
                 const img = document.createElement('img');
                 img.src = reader.result;
-                
-                // എഡിറ്റർ ഭാഗത്തേക്ക് ചിത്രം ചേർക്കുന്നു
-                const editor = document.getElementById('editor');
-                editor.appendChild(img);
-                editor.appendChild(document.createElement('br'));
+                lastFocusedEditor.appendChild(img);
+                lastFocusedEditor.appendChild(document.createElement('br'));
             }
-            reader.readAsDataURL(event.target.files[0]);
+            if (event.target.files[0]) {
+                reader.readAsDataURL(event.target.files[0]);
+            }
         }
     </script>
 
