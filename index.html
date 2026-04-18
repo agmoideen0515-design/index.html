@@ -33,7 +33,7 @@
             height: 2px;
             background-color: #007bff;
             position: absolute;
-            top: 120px;
+            top: 100px;
             z-index: 1;
         }
 
@@ -49,15 +49,12 @@
 
         .header-section {
             display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
             padding: 20px 20px 10px 100px;
             z-index: 5;
-            min-height: 80px;
+            min-height: 60px;
         }
 
-        /* ഹെഡിംഗിൽ ചിത്രം വരാൻ */
-        .lesson-area {
+        .header-area {
             font-size: 22pt;
             flex-grow: 1;
             text-align: right;
@@ -65,18 +62,11 @@
             font-family: 'Amiri', serif;
         }
 
-        .date-area {
-            font-size: 16pt;
-            text-align: left;
-            min-width: 150px;
-            outline: none;
-        }
-
         .typing-container {
             display: flex;
             flex-grow: 1;
             z-index: 5;
-            margin-top: 25px;
+            margin-top: 35px;
         }
 
         .number-margin {
@@ -85,29 +75,30 @@
             font-size: 20pt;
             outline: none;
             color: #555;
+            padding-top: 5px;
         }
 
         .main-content {
             flex-grow: 1;
             padding: 0 15px 0 20px;
             font-size: 24pt;
-            line-height: 2;
+            line-height: 2.2;
             text-align: right;
             outline: none;
             font-family: 'Amiri', serif;
             min-height: 800px;
         }
 
-        /* പ്ലേസ്‌ഹോൾഡർ സെറ്റിംഗ്‌സ് */
+        /* Placeholder - ക്ലിക്ക് ചെയ്യുമ്പോൾ മാറാൻ */
         [contenteditable=true]:empty:before {
             content: attr(data-placeholder);
-            color: #ccc;
+            color: #ddd;
             font-family: sans-serif;
             font-size: 16pt;
         }
 
         img {
-            max-width: 250px; /* ഹെഡിംഗിൽ ചിത്രം വരുമ്പോൾ വല്ലാതെ വലുതാകാതിരിക്കാൻ */
+            max-width: 100%;
             height: auto;
             display: block;
             margin: 10px 0;
@@ -150,25 +141,25 @@
         <button class="btn btn-image" onclick="document.getElementById('imageInput').click()">📷 ചിത്രം ചേർക്കുക</button>
         <button class="btn btn-print" onclick="window.print()">പ്രിന്റ് / PDF</button>
     </div>
+
     <div class="notebook-page">
         <div class="margin-line"></div>
         <div class="top-blue-line"></div>
 
         <div class="header-section">
-            <div class="lesson-area" id="header-area" contenteditable="true" data-placeholder="പാഠം എഴുതുകയോ ചിത്രം ചേർക്കുകയോ ചെയ്യാം..."></div>
-            <div class="date-area" contenteditable="true">തിയ്യതി: ..../..../2026</div>
+            <div class="header-area" id="header-area" contenteditable="true" data-placeholder="ഇവിടെ ഹെഡിംഗ് എഴുതാം..."></div>
         </div>
-
         <div class="typing-container">
             <div class="number-margin" contenteditable="true">1.</div>
-            <div class="main-content" id="main-editor" contenteditable="true" data-placeholder="ഇവിടെ എഴുതി തുടങ്ങാം..."></div>
+            
+            <div class="main-content" id="main-editor" contenteditable="true" data-placeholder="ഇവിടെ പാഠം ടൈപ്പ് ചെയ്യാം..."></div>
         </div>
     </div>
 
     <script>
         let lastFocusedEditor = document.getElementById('main-editor');
 
-        // ഏത് ഭാഗത്താണോ അവസാനം ക്ലിക്ക് ചെയ്തത് അവിടെ ചിത്രം വരാൻ
+        // എവിടെയാണോ അവസാനം ടൈപ്പ് ചെയ്തത് അവിടെ ചിത്രം വരാൻ
         document.getElementById('header-area').addEventListener('focus', function() {
             lastFocusedEditor = this;
         });
